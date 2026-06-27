@@ -249,7 +249,7 @@ export default function ProductForm() {
               className="input"
             />
             <button type="button" onClick={() => removeImage(index)}>
-              ❌
+              Remove
             </button>
           </div>
         ))}

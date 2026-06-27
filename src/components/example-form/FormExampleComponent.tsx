@@ -1,88 +1,92 @@
-'use client'
-import { useLoginUserMutation } from '@/services/auth';
-import {useForm} from 'react-hook-form';
-import { toast } from 'sonner';
+"use client";
 
-type formData = {
-    email: string,
-    password: string
-}
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { useLoginUserMutation } from "@/services/auth";
+
+type FormData = {
+  email: string;
+  password: string;
+};
 
 export default function FormExampleComponent() {
-  //calling login rtk ( custome hook )
+  const [loginRequest, { isLoading }] = useLoginUserMutation();
 
-  const [loginUser] = useLoginUserMutation();
-
-  //1. declare object using with useForm
-  const { register, handleSubmit, reset, setError } = useForm({
-    //2. set default value
+  
+  
+  const { register, handleSubmit, reset } = useForm<FormData>({
     defaultValues: {
       email: "",
       password: "",
     },
   });
-  //3. create handlesubmit to track value form
-  const onSubmit = async (data: formData) => {
+
+  const onSubmit = async (data: FormData) => {
     try {
-      const response = await loginUser(data).unwrap();
-      console.log(response);
-      toast.success("Login successfully!");
-    } catch (error) {
-      toast.error("Failed to login!");
+      const response = await loginRequest({
+        email: data.email,
+        password: data.password,
+      }).unwrap();
+
+      console.log("LOGIN SUCCESS:", response);
+
+      toast.success("You have logged in successfully! ");
+
+      reset();
+    } catch (err: any) {
+      console.log("LOGIN ERROR:", err);
+
+      toast.error(err?.data?.message || err?.message || "Login failed ");
     }
   };
+
   return (
-  <div className="min-h-screen flex items-center justify-center bg-gray-100 font-sans px-4">
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full max-w-sm bg-white p-8 rounded-xl shadow-sm border border-gray-200"
-    >
-      {/* Header */}
-      <h2 className="text-xl font-semibold text-gray-800 text-center">
-        Sign in
-      </h2>
-      
-
-      {/* Email */}
-      <div className="mb-4">
-        <label className="block text-xs text-gray-600 mb-1">Email</label>
-        <input
-          {...register("email")}
-          type="email"
-          id="email"
-          placeholder="you@example.com"
-          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm
-          focus:outline-none focus:border-gray-500"
-        />
-      </div>
-
-      {/* Password */}
-      <div className="mb-6">
-        <label className="block text-xs text-gray-600 mb-1">Password</label>
-        <input
-          {...register("password")}
-          type="password"
-          id="password"
-          placeholder="Enter password"
-          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm
-          focus:outline-none focus:border-gray-500"
-        />
-      </div>
-
-      {/* Button */}
-      <button
-        type="submit"
-        className="w-full bg-gray-900 text-white text-sm py-2.5 rounded-md
-        hover:bg-black transition"
+    <div>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-w-md bg-white p-8 rounded-2xl shadow-sm space-y-6"
       >
-        Sign in
-      </button>
+        <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
 
-      {/* Footer text */}
-      <p className="text-center text-xs text-gray-500 mt-4">
-        Don’t have an account? <span className="text-gray-900 font-medium">Create one</span>
-      </p>
-    </form>
-  </div>
-);
+        <div className="flex flex-col gap-2">
+          <label htmlFor="email" className="text-sm font-medium text-gray-600">
+            Email
+          </label>
+
+          <input
+            {...register("email")}
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label
+            htmlFor="password"
+            className="text-sm font-medium text-gray-600"
+          >
+            Password
+          </label>
+
+          <input
+            {...register("password")}
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg"
+        >
+          {isLoading ? "Logging in..." : "Login"}
+        </button>
+      </form>
+    </div>
+  );
 }

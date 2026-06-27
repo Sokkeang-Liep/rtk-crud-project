@@ -1,27 +1,14 @@
-import ButtonComponent from "@/components/ui/ButtonComponent";
-import GetCountComponent from "@/components/ui/GetCountComponent";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
+import FormExampleComponent from "@/components/example-form/FormExampleComponent";
+import { RegisterForm } from "@/components/example-form/FormRegisterComponent";
+import ProductForm from "@/components/example-form/ProductFormComponent";
 
 
 export default function Home() {
   return (
 
-    <div>
-      <ButtonComponent />
-      <GetCountComponent />
-    </div>
+  <div className="grid grid-cols-2 max-w-7xl items-center place-items-center container mx-auto gap-8 py-4 place-content-center min-h-screen">
+   <ProductForm/>
+
+</div>
   )
-  //  <Card className="max-w-sm">
-  //       <CardHeader>
-  //         <CardTitle>Project Overview</CardTitle>
-  //         <CardDescription>
-  //           Track progress and recent activity for your Next.js app.
-  //         </CardDescription>
-  //       </CardHeader>
-  //       <CardContent>
-  //         Your design system is ready. Start building your next component.
-  //       </CardContent>
-  //     </Card>
-  //   );
 }

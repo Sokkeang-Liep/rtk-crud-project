@@ -36,6 +36,8 @@ import {
   useCreateProductMutation,
 } from "@/services/ecommerce";
 import { toast } from "sonner";
+import Link from "next/link";
+
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -150,14 +152,18 @@ export function DataTable<TData, TValue>({
   };
 
   //handle create new product 
-  const handleCreateNewProduct = () => {
-    createNewProduct(
-      {
-        newProduct:JSON.stringify( newProduct),
-        accessToken: process.env.NEXT_PUBLIC_ACCESS_TOKEN
-      }
-    )
-  }
+   const handleCreateNewProduct = async () => {
+    try {
+      await createNewProduct(newProduct).unwrap();
+      toast.success("Product created successfully.", {
+        position: "top-center",
+      });
+    } catch (error: any) {
+      toast.error(error?.data?.description || "Failed to create product", {
+        position: "top-center",
+      });
+    }
+  };
   return (
     <>
       <div>
@@ -212,9 +218,11 @@ export function DataTable<TData, TValue>({
                 ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* button create new product  */}
-          <Button onClick={() => handleCreateNewProduct()}>
+          {/* <Button onClick={() => handleCreateNewProduct()}>
             Create Product
+          </Button> */}
+          <Button>
+            <Link href={"/create-product"}>Create Product</Link>
           </Button>
         </div>
 

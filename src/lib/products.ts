@@ -44,10 +44,10 @@ export type CreateProductType = {
     screenSize: string,
     battery: string
   },
-  stockQuantity: 0,
-  priceIn: 1,
-  priceOut: 1,
-  discount: 0,
+  stockQuantity: number,
+  priceIn: number,
+  priceOut: number,
+  discount:number,
   color: [
     {
       color: string,
@@ -65,4 +65,7 @@ export type CreateProductType = {
   categoryUuid: string,
   supplierUuid: string,
   brandUuid: string
+}
+export interface UploadResponse {
+  name: string;
 }
